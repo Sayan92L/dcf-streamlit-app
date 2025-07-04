@@ -4,50 +4,36 @@ import json
 import numpy as np
 import pandas as pd
 from fpdf import FPDF
-from io import BytesIO
+import io
 
-def generate_pdf(fair_value, market_price, upside, df):
+def generate_pdf(fair_value_per_share, market_price, upside, df):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", 'B', 16)
-    pdf.cell(200, 10, "DCF Valuation Report", ln=True, align="C")
-    
-    # Branding subtitle
-    pdf.set_font("Arial", '', 12)
-    pdf.cell(200, 10, "Proprietary Solution | ValuationBuddy", ln=True, align="C")
-    pdf.cell(200, 10, "Developed by CFA & FRM Charterholder", ln=True, align="C")
+    pdf.set_font("Arial", size=12)
+
+    pdf.cell(200, 10, txt="DCF Valuation Report", ln=True, align='C')
+    pdf.cell(200, 10, txt="Proprietary Solution - Valuation Buddy", ln=True, align='C')
     pdf.ln(10)
 
-    # Valuation summary
-    pdf.set_font("Arial", '', 12)
-    pdf.cell(200, 10, f"Fair Value per Share: ₹{fair_value:.2f}", ln=True)
-    pdf.cell(200, 10, f"Current Market Price: ₹{market_price}", ln=True)
-    pdf.cell(200, 10, f"Upside/Downside: {upside:.2f}%", ln=True)
+    pdf.cell(200, 10, txt=f"Fair Value per Share (Rs.): {fair_value_per_share:.2f}", ln=True)
+    pdf.cell(200, 10, txt=f"Current Market Price (Rs.): {market_price}", ln=True)
+    pdf.cell(200, 10, txt=f"Upside/Downside: {upside:.2f}%", ln=True)
     pdf.ln(10)
 
-    # Table header
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(40, 10, "Year", 1)
-    pdf.cell(60, 10, "FCF (₹ crores)", 1)
-    pdf.cell(60, 10, "Discounted FCF (₹ crores)", 1)
-    pdf.ln()
-
-    # Table rows
-    pdf.set_font("Arial", '', 12)
+    # Add dataframe table rows
+    pdf.cell(0, 10, txt="DCF Forecasts:", ln=True)
     for index, row in df.iterrows():
-        pdf.cell(40, 10, str(row['Year']), 1)
-        pdf.cell(60, 10, f"{row['FCF (₹ crores)']:.2f}", 1)
-        pdf.cell(60, 10, f"{row['Discounted FCF (₹ crores)']:.2f}", 1)
-        pdf.ln()
+        pdf.cell(0, 10, txt=f"{row['Year']} | FCF: {row['FCF (Rs. crores)']:.2f} | Discounted: {row['Discounted FCF (Rs. crores)']:.2f}", ln=True)
 
-    # Output to BytesIO for Streamlit download
-    pdf_output = BytesIO()
-    pdf.output(pdf_output)
-    pdf_output.seek(0)
-    return pdf_output
+    # ------------------------------
+    # Generate PDF as binary data
+    # ------------------------------
+    pdf_output = pdf.output(dest='S').encode('latin-1')  # 'S' returns as string, then encode
+
+    return io.BytesIO(pdf_output)
 
 
-)
+
 
 st.set_page_config(
     page_title="DCF Valuation Calculator | ValuationBuddy",
@@ -66,18 +52,19 @@ st.markdown(
     """
 )
 
-# 🔽 Sample file download link
-st.markdown(
-    """
-    📁 [Download Sample JSON File](https://raw.githubusercontent.com/Sayan92L/dcf-streamlit-app/refs/heads/main/easemytrip%20financials%2030-june-2025.json)
-    """
-)
 
 # ------------------------------
 # 📥 File Upload
 # ------------------------------
 st.subheader("Upload Company Financials JSON")
 uploaded_file = st.file_uploader("Upload company financials JSON file", type="json")
+
+# Sample download link (below uploader)
+st.markdown(
+    """
+    📁 [Download Sample JSON File](https://raw.githubusercontent.com/Sayan92L/dcf-streamlit-app/main/sample_financials.json)
+    """
+)
 
 if uploaded_file is not None:
     stock_info = json.load(uploaded_file)  # Direct dict structure
@@ -111,9 +98,9 @@ if uploaded_file is not None:
     # ------------------------------
     # Display Inputs
     # ------------------------------
-    st.write(f"✅ Free Cash Flow (₹ crores): {free_cash_flow}")
-    st.write(f"✅ Current Market Price (₹): {market_price}")
-    st.write(f"✅ Market Cap (₹ crores): {market_cap}")
+    st.write(f"✅ Free Cash Flow (Rs. crores): {free_cash_flow}")
+    st.write(f"✅ Current Market Price (Rs.): {market_price}")
+    st.write(f"✅ Market Cap (Rs. crores): {market_cap}")
     st.write(f"✅ Shares Outstanding (crores): {shares_outstanding:.2f}")
 
     # ------------------------------
@@ -157,34 +144,34 @@ if uploaded_file is not None:
     # ------------------------------
     df = pd.DataFrame({
         'Year': [f'Year {i+1}' for i in range(forecast_years)] + ['Terminal'],
-        'FCF (₹ crores)': fcf_forecast + [terminal_value],
-        'Discounted FCF (₹ crores)': discounted_fcf + [discounted_terminal_value]
+        'FCF (Rs. crores)': fcf_forecast + [terminal_value],
+        'Discounted FCF (Rs. crores)': discounted_fcf + [discounted_terminal_value]
     })
 
     st.subheader("✅ Discounted Cash Flow Model")
     st.dataframe(df.round(2))
 
-    st.markdown(f"### **Enterprise Value (₹ crores): {enterprise_value:,.2f}**")
-    st.markdown(f"### **Fair Value per Share (₹): {fair_value_per_share:.2f}**")
-    st.markdown(f"### **Current Market Price (₹): {market_price}**")
+    st.markdown(f"### **Enterprise Value (INR crores): {enterprise_value:,.2f}**")
+    st.markdown(f"### **Fair Value per Share (INR): {fair_value_per_share:.2f}**")
+    st.markdown(f"### **Current Market Price (INR): {market_price}**")
     st.markdown(f"### **Upside/Downside: {upside:.2f}%**")
 
     st.markdown("---")
-    st.markdown("💡 **Note:** This is a simplified public tool. For detailed valuations, [Contact YourBrand Consulting](mailto:youremail@example.com).")
+    st.markdown("💡 **Note:** This is a simplified public tool. For detailed valuations, [Contact ValuationBuddy](mailto:valuationbuddy@gmail.com).")
+    # PDF download button
+    pdf_file = generate_pdf(fair_value_per_share, market_price, upside, df)
 
+    st.download_button(
+        label="Download PDF Report",
+        data=pdf_file,
+        file_name="DCF_Valuation_Report.pdf",
+        mime="application/pdf"
+    )
 else:
     st.info("Please upload a JSON file to proceed.")
 
-    # PDF download button
-pdf_file = generate_pdf(fair_value_per_share, market_price, upside, df)
-st.download_button(
-    label="Download PDF Report",
-    data=pdf_file,
-    file_name="DCF_Valuation_Report.pdf",
-    mime="application/pdf"
-)
 
-    st.markdown("---")
+st.markdown("---")
 st.markdown(
     """
     💼 **Connect for valuation consulting, collaborations, or queries:**  
