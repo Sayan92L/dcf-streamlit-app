@@ -14,8 +14,7 @@ st.set_page_config(
 # ✅ Professional header
 st.title("💹 Free Intrinsic Valuation Calculator for Stocks")
 st.markdown(
-    """
-    **Built by a CFA & FRM Charterholder.**  
+    """  
     Smart valuations for smarter investing decisions.
 
 
@@ -129,7 +128,8 @@ st.markdown(
     """
     💼 **Connect for valuation consulting, collaborations, or queries:**  
     📧 [valuationbuddy@gmail.com](mailto:valuationbuddy@gmail.com)  
-    _(This is a proprietary valuation solution developed by a CFA & FRM Charterholder.)_ 
+    _(**This is a proprietary valuation solution developed by a CFA & FRM Charterholder.**)
+    
     _For educational and informational purposes only_
     """
 )
