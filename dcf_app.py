@@ -1,10 +1,26 @@
+
 import streamlit as st
 import json
 import numpy as np
 import pandas as pd
 
-st.title("🧮 Free Public DCF Valuation Calculator")
-st.markdown("##### *By YourBrand Consulting – Smart Valuations, Smart Investments*")
+st.set_page_config(
+    page_title="DCF Valuation Calculator | ValuationBuddy",
+    page_icon="💹",
+    layout="centered",
+    initial_sidebar_state="collapsed"
+)
+
+# ✅ Professional header
+st.title("💹 Free Intrinsic Valuation Calculator for Stocks")
+st.markdown(
+    """
+    **Built by ValuationBuddy Consulting.**  
+    Smart valuations for smarter investing decisions.
+
+    _Disclaimer: For educational and informational purposes only._
+    """
+)
 
 # ------------------------------
 # 📥 File Upload
