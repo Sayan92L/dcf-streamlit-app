@@ -25,7 +25,7 @@ st.markdown(
 # 📥 File Upload
 # ------------------------------
 st.subheader("Upload Company Financials JSON")
-uploaded_file = st.file_uploader("E:\Investment Portfolio\easemytrip financials 30-june-2025.json", type="json")
+uploaded_file = st.file_uploader("Upload company financials JSON file", type="json")
 
 if uploaded_file is not None:
     stock_info = json.load(uploaded_file)  # Direct dict structure
@@ -128,7 +128,7 @@ st.markdown(
     """
     💼 **Connect for valuation consulting, collaborations, or queries:**  
     📧 [valuationbuddy@gmail.com](mailto:valuationbuddy@gmail.com)  
-    _(**This is a proprietary valuation solution developed by a CFA & FRM Charterholder.**)
+    (**This is a proprietary valuation solution developed by a CFA & FRM Charterholder.**)
     
     _For educational and informational purposes only_
     """
