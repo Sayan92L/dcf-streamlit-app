@@ -15,10 +15,10 @@ st.set_page_config(
 st.title("💹 Free Intrinsic Valuation Calculator for Stocks")
 st.markdown(
     """
-    **Built by ValuationBuddy Consulting.**  
+    **Built by a CFA & FRM Charterholder.**  
     Smart valuations for smarter investing decisions.
 
-    _Disclaimer: For educational and informational purposes only._
+
     """
 )
 
@@ -123,3 +123,13 @@ if uploaded_file is not None:
 
 else:
     st.info("Please upload a JSON file to proceed.")
+
+    st.markdown("---")
+st.markdown(
+    """
+    💼 **Connect for valuation consulting, collaborations, or queries:**  
+    📧 [valuationbuddy@gmail.com](mailto:valuationbuddy@gmail.com)  
+    _(This is a proprietary valuation solution developed by a CFA & FRM Charterholder.)_ 
+    _For educational and informational purposes only_
+    """
+)
