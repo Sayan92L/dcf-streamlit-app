@@ -3,6 +3,51 @@ import streamlit as st
 import json
 import numpy as np
 import pandas as pd
+from fpdf import FPDF
+from io import BytesIO
+
+def generate_pdf(fair_value, market_price, upside, df):
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Arial", 'B', 16)
+    pdf.cell(200, 10, "DCF Valuation Report", ln=True, align="C")
+    
+    # Branding subtitle
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(200, 10, "Proprietary Solution | ValuationBuddy", ln=True, align="C")
+    pdf.cell(200, 10, "Developed by CFA & FRM Charterholder", ln=True, align="C")
+    pdf.ln(10)
+
+    # Valuation summary
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(200, 10, f"Fair Value per Share: ₹{fair_value:.2f}", ln=True)
+    pdf.cell(200, 10, f"Current Market Price: ₹{market_price}", ln=True)
+    pdf.cell(200, 10, f"Upside/Downside: {upside:.2f}%", ln=True)
+    pdf.ln(10)
+
+    # Table header
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(40, 10, "Year", 1)
+    pdf.cell(60, 10, "FCF (₹ crores)", 1)
+    pdf.cell(60, 10, "Discounted FCF (₹ crores)", 1)
+    pdf.ln()
+
+    # Table rows
+    pdf.set_font("Arial", '', 12)
+    for index, row in df.iterrows():
+        pdf.cell(40, 10, str(row['Year']), 1)
+        pdf.cell(60, 10, f"{row['FCF (₹ crores)']:.2f}", 1)
+        pdf.cell(60, 10, f"{row['Discounted FCF (₹ crores)']:.2f}", 1)
+        pdf.ln()
+
+    # Output to BytesIO for Streamlit download
+    pdf_output = BytesIO()
+    pdf.output(pdf_output)
+    pdf_output.seek(0)
+    return pdf_output
+
+
+)
 
 st.set_page_config(
     page_title="DCF Valuation Calculator | ValuationBuddy",
@@ -18,6 +63,13 @@ st.markdown(
     Smart valuations for smarter investing decisions.
 
 
+    """
+)
+
+# 🔽 Sample file download link
+st.markdown(
+    """
+    📁 [Download Sample JSON File](https://raw.githubusercontent.com/Sayan92L/dcf-streamlit-app/refs/heads/main/easemytrip%20financials%2030-june-2025.json)
     """
 )
 
@@ -122,6 +174,15 @@ if uploaded_file is not None:
 
 else:
     st.info("Please upload a JSON file to proceed.")
+
+    # PDF download button
+pdf_file = generate_pdf(fair_value_per_share, market_price, upside, df)
+st.download_button(
+    label="Download PDF Report",
+    data=pdf_file,
+    file_name="DCF_Valuation_Report.pdf",
+    mime="application/pdf"
+)
 
     st.markdown("---")
 st.markdown(
