@@ -67,7 +67,7 @@ uploaded_file = st.file_uploader("Upload company financials JSON file", type="js
 # Sample download link (below uploader)
 st.markdown(
     """
-    📁 [Download Sample JSON File](https://raw.githubusercontent.com/Sayan92L/dcf-streamlit-app/main/sample_financials.json)
+    📁 [Download Sample JSON File](https://raw.githubusercontent.com/Sayan92L/dcf-streamlit-app/refs/heads/main/easemytrip%20financials%2030-june-2025.json)
     """
 )
 
