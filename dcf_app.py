@@ -13,11 +13,15 @@ def generate_pdf(fair_value_per_share, market_price, upside, df):
 
     pdf.cell(200, 10, txt="DCF Valuation Report", ln=True, align='C')
     pdf.cell(200, 10, txt="Proprietary Solution - Valuation Buddy", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 10, "Professional valuations with your assumptions, not black-box guesses.", ln=True)
+    
     pdf.ln(10)
 
     pdf.cell(200, 10, txt=f"Fair Value per Share (Rs.): {fair_value_per_share:.2f}", ln=True)
     pdf.cell(200, 10, txt=f"Current Market Price (Rs.): {market_price}", ln=True)
     pdf.cell(200, 10, txt=f"Upside/Downside: {upside:.2f}%", ln=True)
+
     pdf.ln(10)
 
     # Add dataframe table rows
@@ -51,7 +55,8 @@ st.markdown(
 
     """
 )
-
+st.markdown("##### *Professional valuations with your assumptions, not black-box guesses.*")
+st.markdown("---")
 
 # ------------------------------
 # 📥 File Upload
